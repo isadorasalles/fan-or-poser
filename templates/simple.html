@@ -1,0 +1,60 @@
+
+{% extends "base.html" %}
+{% block content %}
+<meta name="historico" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .mybox {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .column {
+      float: left;
+      padding: 10px;
+      height: 100%; /* Should be removed. Only for demonstration */
+    }
+
+    .left {
+      width: 20%;
+    }
+
+    .right {
+      width: 80%;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+  </style>
+
+
+  <div class="jumbotron">
+  <div class="container-xl">
+    {% block jumbotron %}
+    <h1 class="display-4">Fã ou Poser</h1>
+    {% endblock %}
+    <hr class="my-4">
+    <form action="#" method="post">
+      <action="/action_page.php">
+        <div class="form-group">
+            <label class="control-label lead">Nome do artista:</label>
+            <div>
+                <textarea class="form-control" id="artist" name="artist" maxlength="100" required></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <input class="btn btn-outline-success" type="submit" value="Enviar">
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

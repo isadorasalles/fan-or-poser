@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<meta name="historico" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .mybox {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .column {
+      float: left;
+      padding: 10px;
+      height: 100%; /* Should be removed. Only for demonstration */
+    }
+
+    .left {
+      width: 20%;
+    }
+
+    .right {
+      width: 80%;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+  </style>
+
+
+  <div class="jumbotron">
+  <div class="container-xl">
+    {% block jumbotron %}
+    <h1 class="display-4">Fã ou Poser</h1>
+    {% endblock %}
+    <hr class="my-4">
+    <div>
+        {% for entry in entries %}
+        <div>
+            <div>
+                <div>
+                    <div>
+                        <audio controls>
+                            <source src="http://localhost:5000/{{ entry }}" type="audio/mp3">
+                        </audio>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+        {% else %}
+        <li>
+            <em>Unbelievable. No entries so far</em>
+            {% endfor %}
+    </div>
+
+{% endblock %}
