@@ -4,10 +4,12 @@ import soundfile as sf #pra salvar musica
 import numpy as np
 from scipy.signal import find_peaks #pra achar o número de batidas
 import os              #pra criar a pasta com as músicas
+from itertools import chain, combinations #pra gerar conjunto potencia
 
 
 #determina o numero de batidas numa musica
-def batidas(wav, sr):
+def batidas(caminho):
+	wav, sr = librosa.load(caminho)
 	onset = librosa.onset.onset_strength(wav, sr = sr)
 	peaks = find_peaks(onset, prominence=1)
 	return len(peaks[0])
@@ -15,9 +17,9 @@ def batidas(wav, sr):
 
 #descobre o nome da musica usando o caminho dado
 def nome_musica(caminho):
-	pasta = 'music/'
-	extencao = '.mp3'
-	return caminho[len(pasta):-len(extencao)]
+	barra = caminho.find('/')
+	extencao = caminho.find('.')
+	return caminho[barra+1:extencao]
 
 
 #recebe uma lista de musicas e junta elas numa so
@@ -54,16 +56,29 @@ def descricao(stems, idx):
 
 	#para cada instrumento que tem, coloca a tradução dele na descrição
 	s = 'Música sem vocais, '
-	for i, j in inst:
+	for i, j in enumerate(inst):
 		s = s + traduz[j]
 		if i != len(inst) - 1:
 			s = s + ', '
+	s = s + '.'
 	return s
+
+
+#separa usando com 5 stems
+def separa_tudo(caminho):
+	separator = Separator('spleeter:5stems')
+	dest = 'output'
+	separator.separate_to_file(caminho, dest)
+	musica = nome_musica(caminho)
+	return 'output/' + musica + 'accompaniment.wav'
 
 
 #testa todas as combinacoes de tirar os instrumentos de uma musica
 #e pega a que tem menos coisa, mas que tem coisa suficiente
 def pior_possivel(musica):
+	#tem que comecar separando a musica
+	separa_tudo('music/' + musica + '.mp3')
+
 	#cria os caminhos onde estao as musicas
 	stems = ['piano', 'drums', 'bass', 'other']
 	prefixo = 'output/' + musica + '/'
@@ -72,7 +87,10 @@ def pior_possivel(musica):
 
 	#cria uma pasta onde vai colocar as musicas
 	destino = 'temp/' + musica + '/'
-	os.mkdir(destino)
+	try:
+		os.mkdir(destino)
+	except FileExistsError:
+		pass
 
 	#pega todas as combinacoes de instrumentos
 	P = powerset(caminhos)
@@ -86,8 +104,9 @@ def pior_possivel(musica):
 	for idx, s in enumerate(P):
 		caminho = destino + str(idx) + '.wav'
 		junta_musicas(s, caminho)
+		num_batidas = batidas(caminho)
 		if num_batidas*2 >= original:
-			num_bat.append((batidas(caminho), idx))
+			num_bat.append((num_batidas, idx))
 
 	#coloca num vetor o numero de batidas e ordena
 	num_bat = sorted(num_bat)
@@ -111,31 +130,48 @@ def separador_vocal(caminho):
 	dest = 'output'
 	separator.separate_to_file(caminho, dest)
 	musica = nome_musica(caminho)
-	return 'output/' + musica + 'accompaniment.wav'
+	return 'output/' + musica + '/accompaniment.wav'
 
-#separa usando com 5 stems
-def separa_tudo(caminho):
-	separator = Separator('spleeter:5stems')
-	dest = 'output'
-	separator.separate_to_file(caminho, dest)
-	musica = nome_musica(caminho)
-	return 'output/' + musica + 'accompaniment.wav'
+
+#adiciona ruído Gaussiano a musica
+#quanto maior o valor da constante, menor o ruido
+def adiciona_ruido(caminho, constante = 3):
+	wav, sr = librosa.load(caminho)
+	maxi = max(wav)
+	wav = wav + np.random.normal(0, maxi/constante, len(wav))
+	destino = 'temp/' + nome_musica(caminho) + '/'
+	try:
+		os.mkdir(destino)
+	except FileExistsError:
+		pass
+	destino = destino + 'ruido.wav'
+	sf.write(destino, wav, sr)
+	return destino
 
 
 #a ideia eh que vai passar o caminho da musica e o "nivel"
 #nivel 0: nao faz nada
 #nivel 1: tira vocal
 #nivel 2: tira vocal e mais alguma coisa atrapalhando pouco
-#nivel 3: adiciona ruído no anterior
-#nivel 4: corta a anterior
+#nivel 3: adiciona ruído na música original
+#nivel 4: adiciona ruído na música do nível 3
 #sempre vou retornar um par ordenado (caminho, descricao)
 def separador(caminho, nivel):
 	if nivel == 0:
 		return (caminho,
-				'Música original sem alterações')
+				'Música original sem alterações.')
 	if nivel == 1:
 		return (separador_vocal(caminho),
-				'Música com os vocais removidos')
+				'Música com os vocais removidos.')
 	if nivel == 2:
 		return pior_possivel(nome_musica(caminho))
+	if nivel == 3:
+		return (adiciona_ruido(caminho),
+				'Música com ruído Gaussiano adicionado.')
+	if nivel == 4:
+		novo_caminho, desc = pior_possivel(nome_musica(caminho))
+		print('\n\n', novo_caminho, desc, '\n')
+		return (adiciona_ruido(novo_caminho, 12),
+				desc[:-1] + ' e com ruído Gaussiano.')
 
+# print(separador('music/Andar com fé.mp3', 1))

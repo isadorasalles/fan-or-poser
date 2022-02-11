@@ -17,7 +17,19 @@ def baixa(artista):
 	items = result['artists']['items']
 	if len(items) == 0:
 		return []
-	artist = items[0]
+
+	#dos selecionados escolhe o que tem mesmo prefixo e maior popularidade
+	idx = 0
+	pop = 0
+	for j, artist in enumerate(items):
+		ok = True
+		lim = min(len(artista), len(artist['name']))
+		for i in range(lim):
+			ok = ok and (artista[i] == artist['name'][i])
+		if ok and artist['popularity'] > pop:
+			idx = j
+			pop = artist['popularity']
+	artist = items[idx]
 
 	#baixa a foto do artista com o nome que foi feita a pesquisa
 	for i in artist['images']:
@@ -34,11 +46,11 @@ def baixa(artista):
 		if len(baixadas) >= 10:
 			break
 		try:
-			urllib.request.urlretrieve(faixa['preview_url'], "music/" + faixa['name'] + ".mp3")
+			urllib.request.urlretrieve(faixa['preview_url'], "music/" + faixa['name'].replace('/', ' ') + ".mp3")
 			baixadas.append(faixa['name'])
 		except TypeError:
 			pass
 
 	return baixadas
 
-print(baixa('Anitta'))
+# print(baixa('Gilberto Gil'))
