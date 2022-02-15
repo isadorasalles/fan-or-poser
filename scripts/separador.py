@@ -56,7 +56,7 @@ def descricao(stems, idx):
 	
 	#gera o conjunto potencia para ver qual deles eu escolhi
 	P = powerset(stems)
-	P = [list(i) for i in P[:-1]]
+	P = [list(i) for i in P]
 	inst = P[idx]
 
 	#para cada instrumento que tem, coloca a tradução dele na descrição
