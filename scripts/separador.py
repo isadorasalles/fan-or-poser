@@ -199,4 +199,4 @@ def separador(caminho, nivel):
 	save_music_to(caminho_antigo, caminho_novo)
 	return (nome_musica(caminho_novo), descricao)
 
-print(separador('music/Andar com fé.mp3', 5))
+# print(separador('music/Andar com fé.mp3', 5))

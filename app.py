@@ -54,7 +54,7 @@ def computa_pontos():
 
 def chegou_ao_fim():
     _, _, _, nivel, _ = estado_atual()
-    if nivel == '4':
+    if nivel == '5':
         return True
     return False
 
@@ -80,7 +80,7 @@ def show_entries():
         if chegou_ao_fim():
             pontuacao = computa_pontos()
             fan = 0
-            if pontuacao >= 4:
+            if pontuacao >= 5:
                 fan = 1
             logging.debug(pontuacao)
             return render_template('score.html', pontos=pontuacao, fan=fan)

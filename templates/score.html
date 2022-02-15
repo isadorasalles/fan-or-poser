@@ -35,15 +35,15 @@
       <div class="row">
         <div class="col">
           <p style="font-size:30px">Você acertou {{pontos}} perguntas.</p>
-          {% if pontos == 5 %}
+          {% if pontos == 6 %}
           <p style="font-size:30px">Você foi incrível. Tente de novo para outros artistas.</p>
           {% endif %}
 
-          {% if pontos == 4 %}
+          {% if pontos == 5 %}
           <p style="font-size:30px">Você é um grande fã, mas ainda pode melhorar. Tente novamente.</p>
           {% endif %}
 
-          {% if pontos <= 3 %}
+          {% if pontos <= 4 %}
           <p style="font-size:30px">Tá precisando melhorar hein... </p>
           <p style="font-size:30px">Que tal tentar de novo? </p>
           {% endif %}
@@ -52,10 +52,10 @@
         
         </div>
         <div class="col">
-          {% if pontos >= 4 %}
+          {% if pontos >= 5 %}
            <img src="https://media.giphy.com/media/Yx2OItXSuAwtJXaKhd/giphy.gif" alt="this slowpoke moves"  width="250" /> 
           {% endif %}
-          {% if pontos <= 3 %}
+          {% if pontos <= 4 %}
            <img src="https://media.giphy.com/media/jBCYnJGiQ50li/giphy.gif" alt="this slowpoke moves"  width="250" /> 
           {% endif %} 
         </div>
