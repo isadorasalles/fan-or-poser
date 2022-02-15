@@ -153,6 +153,18 @@ def adiciona_ruido(caminho, constante = 3):
 	return destino
 
 
+#deixa a musica mais aguda
+def agudo(caminho, destino):
+	wav, sr = librosa.load(caminho)
+	D = librosa.stft(wav)
+	pad_size = 20
+	pad = np.zeros(shape=(pad_size, D.shape[1]))
+	D_ = np.concatenate((pad, D))
+	D = D_[:-pad_size, :]
+	y = librosa.istft(D)
+	sf.write(destino, y, sr)
+
+
 #a ideia eh que vai passar o caminho da musica e o "nivel"
 #nivel 0: nao faz nada
 #nivel 1: tira vocal
@@ -174,9 +186,12 @@ def interface_separador(caminho, nivel):
 				'Música com ruído Gaussiano adicionado.')
 	if nivel == 4:
 		novo_caminho, desc = pior_possivel(nome_musica(caminho))
-		print('\n\n', novo_caminho, desc, '\n')
 		return (adiciona_ruido(novo_caminho, 12),
 				desc[:-1] + ' e com ruído Gaussiano.')
+	if nivel == 5:
+		destino = 'temp/agudo.wav'
+		agudo(caminho, destino)
+		return (destino, 'Música mais aguda')
 
 def separador(caminho, nivel):
 	caminho_antigo, descricao = interface_separador(caminho, nivel)
@@ -184,4 +199,4 @@ def separador(caminho, nivel):
 	save_music_to(caminho_antigo, caminho_novo)
 	return (nome_musica(caminho_novo), descricao)
 
-# print(separador('music/Dueto.mp3', 2))
+print(separador('music/Andar com fé.mp3', 5))
