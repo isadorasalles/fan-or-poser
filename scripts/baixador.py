@@ -31,13 +31,13 @@ def baixa(artista):
 			pop = artist['popularity']
 	artist = items[idx]
 
-	if not os.path.exists("photos/"):
-		os.makedirs("photos/")
+	if not os.path.exists("static/"):
+		os.makedirs("static/")
 
 	#baixa a foto do artista com o nome que foi feita a pesquisa
 	for i in artist['images']:
 		if i['width'] == 640:
-			urllib.request.urlretrieve(i['url'], "photos/" + artista + ".jpg")
+			urllib.request.urlretrieve(i['url'], "static/" + artista + ".jpg")
 
 	#pega as top_tracks dele
 	uri = 'spotify:artist:' + artist['id']

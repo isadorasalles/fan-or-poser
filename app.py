@@ -29,9 +29,9 @@ app = Flask(__name__)
 def salva_respostas(id_):
     with open('static/acertos.txt', 'a+') as f:
         if verifica_musica(id_):
-            f.write('True\n')
+            f.write('1\n')
         else:
-            f.write('False\n')
+            f.write('0\n')
 
 def test_options(request):
     if 'music0' in request.form:
@@ -43,30 +43,46 @@ def test_options(request):
     elif 'music3' in request.form:
         salva_respostas(3)
 
+def computa_pontos():
+    with open('static/acertos.txt', 'r') as f:
+        pontos = f.readlines()
+    soma = 0
+    for p in pontos:
+        soma += int(p.replace('\n', ''))
+    os.remove('static/acertos.txt')
+    return soma
+
+def chegou_ao_fim():
+    _, _, _, nivel, _ = estado_atual()
+    if nivel == '4':
+        return True
+    return False
 
 #Route to render GUI
 @app.route('/', methods=['POST', 'GET'])
 def show_entries():
     if request.method == "POST":
+        ## se o usuario marcar mais de uma resposta deve aparecer um aviso
         if len(request.form) > 1:
-            musica_alvo, opcoes, ind = estado_atual()
-            ## renderizar com aviso
-            return render_template('play.html', musica=musica_alvo, op=opcoes, i=ind, aviso=1)
+            musica_alvo, opcoes, ind, _, artista_img = estado_atual()
+            return render_template('play.html', musica=musica_alvo, image=artista_img ,op=opcoes, i=ind, aviso=1)
         
         if 'artist' in request.form:
-            logging.debug(request.form['artist'])
-            musics, musica_alvo, opcoes, ind = primeira_musica(request.form["artist"])
+            musics, musica_alvo, opcoes, ind, artista_img = primeira_musica(request.form['artist'])
             logging.debug(musica_alvo)
             if musics != []:
-                logging.debug(musica_alvo)
-                return render_template('play.html', musica=musica_alvo, op=opcoes, i=ind, aviso=0)
+                logging.debug(artista_img)
+                return render_template('play.html', musica=musica_alvo, image=artista_img, op=opcoes, i=ind, aviso=0)
             else:
                 return render_template('simple.html', aviso=1)
 
         test_options(request)
-        musica_alvo, opcoes, ind = proxima_musica()
+        if chegou_ao_fim():
+            pontuacao = computa_pontos()
+            return render_template('score.html', pontos=pontuacao)
+        musica_alvo, opcoes, ind, artista_img = proxima_musica()
         logging.debug(musica_alvo)
-        return render_template('play.html', musica=musica_alvo, op=opcoes, i=ind, aviso=0)
+        return render_template('play.html', musica=musica_alvo, image=artista_img, op=opcoes, i=ind, aviso=0)
        
     return render_template('simple.html', aviso=0)
 
