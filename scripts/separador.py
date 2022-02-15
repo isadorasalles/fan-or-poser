@@ -5,7 +5,12 @@ import numpy as np
 from scipy.signal import find_peaks #pra achar o número de batidas
 import os              #pra criar a pasta com as músicas
 from itertools import chain, combinations #pra gerar conjunto potencia
+import random
 
+def save_music_to(original, destino):
+	wav, sr = librosa.load(original)
+	sf.write(destino, wav, sr)
+	
 
 #determina o numero de batidas numa musica
 def batidas(caminho):
@@ -156,7 +161,7 @@ def adiciona_ruido(caminho, constante = 3):
 #nivel 3: adiciona ruído na música original
 #nivel 4: adiciona ruído na música do nível 3
 #sempre vou retornar um par ordenado (caminho, descricao)
-def separador(caminho, nivel):
+def interface_separador(caminho, nivel):
 	if nivel == 0:
 		return (caminho,
 				'Música original sem alterações.')
@@ -174,4 +179,10 @@ def separador(caminho, nivel):
 		return (adiciona_ruido(novo_caminho, 12),
 				desc[:-1] + ' e com ruído Gaussiano.')
 
-# print(separador('music/Andar com fé.mp3', 1))
+def separador(caminho, nivel):
+	caminho_antigo, descricao = interface_separador(caminho, nivel)
+	caminho_novo = nome_musica(caminho) + '_' + str(nivel) + '.wav'
+	save_music_to(caminho_antigo, caminho_novo)
+	return (caminho_novo, descricao)
+
+print(separador('music/Dueto.mp3', 1))
