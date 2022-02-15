@@ -1,69 +1,64 @@
 
 {% extends "base.html" %}
 {% block content %}
-<meta name="historico" content="width=device-width, initial-scale=1">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
 
-    .mybox {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .column {
-      float: left;
-      padding: 10px;
-      height: 100%; /* Should be removed. Only for demonstration */
-    }
-
-    .left {
-      width: 20%;
-    }
-
-    .right {
-      width: 80%;
-    }
-
-    /* Clear floats after the columns */
-    .row:after {
-    content: "";
-    display: table;
-    clear: both;
-    }
-  </style>
-
-
-  <div class="jumbotron">
-  <div class="container-xl">
+  <div  style="background: #FCEBF5 !important" class="jumbotron">
+    <div class="container-xl">
     {% block jumbotron %}
-    <h1 class="display-4">Fã ou Poser</h1>
-    {% endblock %}
-    <hr class="my-4">
-    <form action="#" method="post">
-      <action="/action_page.php">
-        <div class="form-group">
-            <label class="control-label lead">Nome do artista:</label>
-            <div>
-                <textarea class="form-control" id="artist" name="artist" maxlength="100" required></textarea>
-            </div>
+      <div class="row">
+        <div class="col">
+          <img src="https://media.giphy.com/media/YQMiQtopRjjZRSYRJF/giphy.gif" alt="this slowpoke moves"  width="120" />
         </div>
-        <div class="form-group">
-            <div>
-                <input class="btn btn-outline-success" type="submit" value="Enviar">
-            </div>
+        <div class="col">
+          <h1 class="display-4">Fã ou Poser</h1>
         </div>
-    </form>
-
-    {% if aviso == 1 %}
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>Não encontramos seu artista no Spotify.</strong> Tente outro artista.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <div class="col"></div>
       </div>
-    {% endif %}
+      <hr class="my-4">
+        <p>Fã ou Poser é uma aplicação interativa que utiliza de diversos conceitos de recuperação musical. 
+          A ideia é que os usuários serão capazes de realizar um quiz para saber se são fãs ou não de um determinado artista. 
+          A cada questão temos um nível de dificuldade a mais. Utilizando decomposição musical conseguimos tirar o vocal da música e algum instrumento. Em algumas etapas também são adicionados ruídos na música. Vamos testar se você é fã de algum artista? Abaixo insira o nome do artista para começar.</p>
+    {% endblock %}
+    </div>
+  </div>
+  <div style="background:transparent !important" class="jumbotron">
+    <div class="container-xl">
+      <div class="row">
+        <div class="col">
+          <img src="https://media.giphy.com/media/gYjWZ7c1aVRVxIpo4Z/giphy.gif" alt="this slowpoke moves"  width="120" /> 
+        </div>
+        <div class="col-8">
+          <form action="#" method="post">
+            <action="/action_page.php">
+              <div class="form-group">
+                  <label class="control-label lead">Nome do artista:</label>
+                  <div>
+                      <textarea class="form-control" id="artist" name="artist" maxlength="100" required></textarea>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <div>
+                      <input class="btn btn-outline-success" type="submit" value="Enviar">
+                  </div>
+              </div>
+          </form>
+          {% if aviso == 1 %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>Não encontramos seu artista no Spotify.</strong> Tente outro artista.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% endif %}
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+  </div>
+    
+
+    <!-- <img src="https://media.giphy.com/media/srg19CG0cKMuI/giphy.gif" alt="this slowpoke moves"  width="550" /> -->
+    
+  
  
 {% endblock %}

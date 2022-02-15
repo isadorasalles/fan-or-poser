@@ -1,47 +1,67 @@
 
 {% extends "base.html" %}
 {% block content %}
-<meta name="historico" content="width=device-width, initial-scale=1">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    .mybox {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .column {
-      float: left;
-      padding: 10px;
-      height: 100%; /* Should be removed. Only for demonstration */
-    }
-
-    .left {
-      width: 20%;
-    }
-
-    .right {
-      width: 80%;
-    }
-
-    /* Clear floats after the columns */
-    .row:after {
-    content: "";
-    display: table;
-    clear: both;
-    }
-  </style>
 
 
-  <div class="jumbotron">
-  <div class="container-xl">
+  <div style="background: #FCEBF5 !important" class="jumbotron">
+    <div class="container-xl">
     {% block jumbotron %}
-    <h1 class="display-4">Fã ou Poser</h1>
+      {% if fan == 1 %}
+        <div class="row">
+          <div class="col">
+          <h1 class="display-4">Você é Fã!!!!</h1>
+          </div>
+          <div class="col">
+            <img src="https://media.giphy.com/media/S9i8jJxTvAKVHVMvvW/giphy.gif" alt="this slowpoke moves"  width="420" /> 
+          </div>
+        </div>
+        
+      {% endif %}
+      {% if fan == 0 %}
+        <div class="row">
+          <div class="col">
+          <h1 class="display-4">Você é POSER!</h1>
+          </div>
+          <div class="col">
+            <img src="https://media.giphy.com/media/M28rUlcjueKUE/giphy.gif" alt="this slowpoke moves"  width="550" /> 
+          </div>
+        </div>
+      {% endif %}
     {% endblock %}
-    <p>Sua pontuacao foi {{pontos}}</p>
+    </div>
+  </div>
+  <div style="background: transparent !important" class="jumbotron">
+    <div class="container-xl">
+      <div class="row">
+        <div class="col">
+          <p style="font-size:30px">Você acertou {{pontos}} perguntas.</p>
+          {% if pontos == 5 %}
+          <p style="font-size:30px">Você foi incrível. Tente de novo para outros artistas.</p>
+          {% endif %}
+
+          {% if pontos == 4 %}
+          <p style="font-size:30px">Você é um grande fã, mas ainda pode melhorar. Tente novamente.</p>
+          {% endif %}
+
+          {% if pontos <= 3 %}
+          <p style="font-size:30px">Tá precisando melhorar hein... </p>
+          <p style="font-size:30px">Que tal tentar de novo? </p>
+          {% endif %}
+          <a class="btn btn-outline-secondary" href="/" style="font-size:24px">Tentar de novo</a>
+          <img src="https://media.giphy.com/media/0Xsbt6SoJqLOf0cQW6/giphy.gif" alt="this slowpoke moves"  width="50" /> 
+        
+        </div>
+        <div class="col">
+          {% if pontos >= 4 %}
+           <img src="https://media.giphy.com/media/Yx2OItXSuAwtJXaKhd/giphy.gif" alt="this slowpoke moves"  width="250" /> 
+          {% endif %}
+          {% if pontos <= 3 %}
+           <img src="https://media.giphy.com/media/jBCYnJGiQ50li/giphy.gif" alt="this slowpoke moves"  width="250" /> 
+          {% endif %} 
+        </div>
+      </div>
+    </div>
+  </div>
 
  
 {% endblock %}

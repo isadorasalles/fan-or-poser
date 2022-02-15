@@ -64,25 +64,29 @@ def show_entries():
     if request.method == "POST":
         ## se o usuario marcar mais de uma resposta deve aparecer um aviso
         if len(request.form) > 1:
-            musica_alvo, opcoes, ind, _, artista_img = estado_atual()
-            return render_template('play.html', musica=musica_alvo, image=artista_img ,op=opcoes, i=ind, aviso=1)
+            musica_alvo, opcoes, ind, nivel, artista_img = estado_atual()
+            return render_template('play.html', musica=musica_alvo, nivel=int(nivel), image=artista_img ,op=opcoes, i=ind, aviso=1)
         
         if 'artist' in request.form:
             musics, musica_alvo, opcoes, ind, artista_img = primeira_musica(request.form['artist'])
             logging.debug(musica_alvo)
             if musics != []:
                 logging.debug(artista_img)
-                return render_template('play.html', musica=musica_alvo, image=artista_img, op=opcoes, i=ind, aviso=0)
+                return render_template('play.html', musica=musica_alvo, nivel=0, image=artista_img, op=opcoes, i=ind, aviso=0)
             else:
                 return render_template('simple.html', aviso=1)
 
         test_options(request)
         if chegou_ao_fim():
             pontuacao = computa_pontos()
-            return render_template('score.html', pontos=pontuacao)
-        musica_alvo, opcoes, ind, artista_img = proxima_musica()
+            fan = 0
+            if pontuacao >= 4:
+                fan = 1
+            logging.debug(pontuacao)
+            return render_template('score.html', pontos=pontuacao, fan=fan)
+        musica_alvo, opcoes, ind, artista_img, nivel = proxima_musica()
         logging.debug(musica_alvo)
-        return render_template('play.html', musica=musica_alvo, image=artista_img, op=opcoes, i=ind, aviso=0)
+        return render_template('play.html', musica=musica_alvo, nivel=int(nivel), image=artista_img, op=opcoes, i=ind, aviso=0)
        
     return render_template('simple.html', aviso=0)
 
