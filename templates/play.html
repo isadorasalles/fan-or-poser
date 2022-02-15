@@ -42,48 +42,58 @@
     {% endblock %}
     <hr class="my-4">
     <div>
-        <img src="{{ image }}" width=300 height=300 />
+    
+      <div class="container">
+        <div class="row">
+            <div class="col">
+              <img src="{{ image }}" width=300 height=300 />
 
-        {% for entry in musica %}
-        <div>
-            <audio controls>
-                <source src="http://localhost:5000/{{entry}}" type="audio/mp3">
-            </audio>    
-        </div>
-        
-        <form action="#" method="post">
-        <div class="form-group">
-          <input class="control-label" type="checkbox" id="music0" name="music0">
-          <label class="control-label lead" for="music0"> {{op[0]}} </label>
-        </div>
+              {% for entry in musica %}
+              <div>
+                  <audio controls>
+                      <source src="http://localhost:5000/{{entry}}" type="audio/mp3">
+                  </audio>    
+              </div>
+              
+              {% else %}
+              <li>
+                  <em>Unbelievable. No entries so far</em>
+                  {% endfor %}
 
-        <div class="form-group">
-          <input class="control-label" type="checkbox" id="music1" name="music1">
-          <label class="control-label lead" for="music1"> {{op[1]}} </label>
-        </div>
-
-        <div class="form-group">
-          <input class="control-label" type="checkbox" id="music2" name="music2">
-          <label class="control-label lead" for="music0"> {{op[2]}} </label>
-        </div>
-
-        <div class="form-group">
-          <input class="control-label" type="checkbox" id="music3" name="music3">
-          <label class="control-label lead" for="music0"> {{op[3]}} </label>
-        </div>
-
-        <div class="form-group">
-          <div>
-              <input class="btn btn-outline-success" type="submit" value="Enviar">
+            </div>
+            <div class="col">
+                <form action="#" method="post">
+                  <label class="control-label lead">Qual o nome da música?</label>
+                  <div class="form-group">
+                    <input class="control-label" type="checkbox" id="music0" name="music0">
+                    <label class="control-label lead" for="music0"> {{op[0]}} </label>
+                  </div>
+          
+                  <div class="form-group">
+                    <input class="control-label" type="checkbox" id="music1" name="music1">
+                    <label class="control-label lead" for="music1"> {{op[1]}} </label>
+                  </div>
+          
+                  <div class="form-group">
+                    <input class="control-label" type="checkbox" id="music2" name="music2">
+                    <label class="control-label lead" for="music0"> {{op[2]}} </label>
+                  </div>
+          
+                  <div class="form-group">
+                    <input class="control-label" type="checkbox" id="music3" name="music3">
+                    <label class="control-label lead" for="music0"> {{op[3]}} </label>
+                  </div>
+          
+                  <div class="form-group">
+                    <div>
+                        <input class="btn btn-outline-success" type="submit" value="Enviar">
+                    </div>
+                  </div>
+                  </form>
+              </div>
           </div>
         </div>
-        </form>
-       
-
-        {% else %}
-        <li>
-            <em>Unbelievable. No entries so far</em>
-            {% endfor %}
+        
     </div>
 
     {% if aviso == 1 %}
