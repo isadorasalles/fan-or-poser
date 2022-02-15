@@ -23,8 +23,8 @@ def batidas(caminho):
 #descobre o nome da musica usando o caminho dado
 def nome_musica(caminho):
 	barra = caminho.find('/')
-	extencao = caminho.find('.')
-	return caminho[barra+1:extencao]
+	# extencao = caminho.find('.')
+	return caminho[barra+1:-4]
 
 
 #recebe uma lista de musicas e junta elas numa so
@@ -92,10 +92,9 @@ def pior_possivel(musica):
 
 	#cria uma pasta onde vai colocar as musicas
 	destino = 'temp/' + musica + '/'
-	try:
-		os.mkdir(destino)
-	except FileExistsError:
-		pass
+
+	if not os.path.exists(destino):
+		os.makedirs(destino)
 
 	#pega todas as combinacoes de instrumentos
 	P = powerset(caminhos)
@@ -181,8 +180,8 @@ def interface_separador(caminho, nivel):
 
 def separador(caminho, nivel):
 	caminho_antigo, descricao = interface_separador(caminho, nivel)
-	caminho_novo = nome_musica(caminho) + '_' + str(nivel) + '.wav'
+	caminho_novo = 'music/' + nome_musica(caminho) + '_' + str(nivel) + '.wav'
 	save_music_to(caminho_antigo, caminho_novo)
-	return (caminho_novo, descricao)
+	return (nome_musica(caminho_novo), descricao)
 
-print(separador('music/Dueto.mp3', 1))
+# print(separador('music/Dueto.mp3', 1))

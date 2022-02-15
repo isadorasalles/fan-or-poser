@@ -31,6 +31,9 @@ def baixa(artista):
 			pop = artist['popularity']
 	artist = items[idx]
 
+	if not os.path.exists("photos/"):
+		os.makedirs("photos/")
+
 	#baixa a foto do artista com o nome que foi feita a pesquisa
 	for i in artist['images']:
 		if i['width'] == 640:
@@ -39,6 +42,9 @@ def baixa(artista):
 	#pega as top_tracks dele
 	uri = 'spotify:artist:' + artist['id']
 	result = sp.artist_top_tracks(uri)
+
+	if not os.path.exists("music/"):
+		os.makedirs("music/")
 
 	#baixa 10 músicas (ou todas que podem)
 	baixadas = []

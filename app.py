@@ -1,10 +1,13 @@
-from flask import Flask,render_template, Response, request
+from flask import Flask,render_template, Response, request, send_from_directory
 import sys
 # Tornado web server
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from scripts.baixador import baixa
+from scripts.separador import separador
+from scripts.util import primeira_musica, verifica_musica, estado_atual, proxima_musica
+import os
 
 #Debug logger
 import logging 
@@ -23,33 +26,68 @@ musics = []
 # Initialize Flask.
 app = Flask(__name__)
 
+def salva_respostas(id_):
+    with open('static/acertos.txt', 'a+') as f:
+        if verifica_musica(id_):
+            f.write('True\n')
+        else:
+            f.write('False\n')
+
+def test_options(request):
+    if 'music0' in request.form:
+        salva_respostas(0)
+    elif 'music1' in request.form:
+        salva_respostas(1)
+    elif 'music2' in request.form:
+        salva_respostas(2)
+    elif 'music3' in request.form:
+        salva_respostas(3)
+
 
 #Route to render GUI
 @app.route('/', methods=['POST', 'GET'])
 def show_entries():
     if request.method == "POST":
-        logging.debug('Oii')
-        if request.form['artist']:
-            artist = request.form["artist"]
-            musics = baixa(artist)
-            logging.debug(musics)
-            return render_template('play.html', entries=musics)
-        else:
-            return render_template('simple.html')
+        if len(request.form) > 1:
+            musica_alvo, opcoes, ind = estado_atual()
+            ## renderizar com aviso
+            return render_template('play.html', musica=musica_alvo, op=opcoes, i=ind, aviso=1)
+        
+        if 'artist' in request.form:
+            logging.debug(request.form['artist'])
+            musics, musica_alvo, opcoes, ind = primeira_musica(request.form["artist"])
+            logging.debug(musica_alvo)
+            if musics != []:
+                logging.debug(musica_alvo)
+                return render_template('play.html', musica=musica_alvo, op=opcoes, i=ind, aviso=0)
+            else:
+                return render_template('simple.html', aviso=1)
 
-    else:
-        return render_template('simple.html')
+        test_options(request)
+        musica_alvo, opcoes, ind = proxima_musica()
+        logging.debug(musica_alvo)
+        return render_template('play.html', musica=musica_alvo, op=opcoes, i=ind, aviso=0)
+       
+    return render_template('simple.html', aviso=0)
 
 #Route to stream music
 @app.route('/<string:stream_name>')
 def streammp3(stream_name):
     def generate():
-        song = "music/" + stream_name + ".mp3"
-        with open(song, "rb") as fwav:
-            data = fwav.read(1024)
-            while data:
-                yield data
+        try:
+            song = "music/" + stream_name + ".mp3"
+            with open(song, "rb") as fwav:
                 data = fwav.read(1024)
+                while data:
+                    yield data
+                    data = fwav.read(1024)
+        except:
+            song = "music/" + stream_name + ".wav"
+            with open(song, "rb") as fwav:
+                data = fwav.read(1024)
+                while data:
+                    yield data
+                    data = fwav.read(1024)
                 
     return Response(generate(), mimetype="audio/mp3")
 
