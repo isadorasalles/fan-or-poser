@@ -71,7 +71,7 @@ def descricao(stems, idx):
 
 #separa usando com 5 stems
 def separa_tudo(caminho):
-	separator = Separator('spleeter:5stems')
+	separator = Separator('spleeter:4stems')
 	dest = 'output'
 	separator.separate_to_file(caminho, dest)
 	musica = nome_musica(caminho)
@@ -85,7 +85,7 @@ def pior_possivel(musica):
 	separa_tudo('music/' + musica + '.mp3')
 
 	#cria os caminhos onde estao as musicas
-	stems = ['piano', 'drums', 'bass', 'other']
+	stems = ['drums', 'bass', 'other']
 	prefixo = 'output/' + musica + '/'
 	sufixo = '.wav'
 	caminhos = [prefixo + i + sufixo for i in stems]
@@ -184,4 +184,4 @@ def separador(caminho, nivel):
 	save_music_to(caminho_antigo, caminho_novo)
 	return (nome_musica(caminho_novo), descricao)
 
-# print(separador('music/Dueto.mp3', 1))
+print(separador('music/Dueto.mp3', 2))
