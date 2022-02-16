@@ -6,3 +6,10 @@ Neste trabalho foi desenvolvida uma aplicação interativa utilizando diversos c
 ```
 pip install -r requirements.txt
 ```
+
+### Como Executar
+```
+export CLIENT_ID=client_id_from_spotify_API
+export CLIENT_SECRET=client_secret_from_spotify_API
+python app.py
+```
